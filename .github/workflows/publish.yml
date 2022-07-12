@@ -30,6 +30,7 @@ jobs:
         uses: "phips28/gh-action-bump-version@master"
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+          PACKAGEJSON_DIR: "package"
 
       - name: Publish to npm
         run: cd package && echo "//registry.npmjs.org/:_authToken=$NPM_AUTH_TOKEN" > ~/.npmrc && npm publish --access public
