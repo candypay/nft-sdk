@@ -1,6 +1,6 @@
 {
   "name": "@candypay/sdk",
-  "version": "0.0.10",
+  "version": "0.0.11",
   "description": "A TypeScript SDK for effortlessly create NFT minting functions for Candy Machine v2 collections",
   "license": "MIT",
   "main": "dist/index.js",
