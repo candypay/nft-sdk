@@ -21,7 +21,7 @@ jobs:
         run: node scripts/syncReadme.js
 
       - name: Install dependencies
-        run: npm install
+        run: cd package & npm install
 
       - name: Build
         run: cd package && npm run build
