@@ -2,7 +2,7 @@
 
 CandyPay SDK lets you effortlessly create NFT minting functions for Candy Machine v2 collections. Simulate minting transactions for multiple use-cases like NFT collection launch, gasless mint and many more on Solana Blockchain!
 
-## Installation 
+## Installation
 
 To install the SDK, run the following command:
 
@@ -35,14 +35,10 @@ The `candypay.mint()` function would generate required instructions by which use
 import { candypay } from "@candypay/sdk";
 
 const ixnArray = await candypay.mint(
-
-      "devnet",
-
-      "GrVSy3ZRbuw5ACbwSEMsj9gULk9MW7QPK1TUYcP6nLM",
-
-      publicKey
-
-    );
+  "devnet",
+  "GrVSy3ZRbuw5ACbwSEMsj9gULk9MW7QPK1TUYcP6nLM",
+  publicKey
+);
 
 const transaction = new Transaction().add(...ixnArray.instructions);
 
@@ -54,8 +50,7 @@ transaction.feePayer = publicKey;
 
 transaction.partialSign(ixnArray["mint"]);
 
-const confirmation = await sendTransaction(transaction, connection)
-
+const confirmation = await sendTransaction(transaction, connection);
 ```
 
 Full snippet: https://github.com/candypay/sdk/blob/main/examples/solana-wallet-adapter/components/SendTxnButton.tsx
@@ -77,16 +72,11 @@ The `candypay.gasless()` function would generate required instructions by which 
 import { candypay } from "@candypay/sdk";
 
 const ixnArray = await candypay.gasless(
-
-      "devnet",
-
-      "GrVSy3ZRbuw5ACbwSEMsj9gULk9MW7QPK1TUYcP6nLM",
-
-      payerAddress,
-
-      publicKey
-
-    );
+  "devnet",
+  "GrVSy3ZRbuw5ACbwSEMsj9gULk9MW7QPK1TUYcP6nLM",
+  payerAddress,
+  publicKey
+);
 
 const transaction = new Transaction().add(...ixnArray.instructions);
 
@@ -99,7 +89,6 @@ transaction.feePayer = payerAddress;
 transaction.partialSign(ixnArray["mint"], payerKeypair);
 
 const confirmation = await sendTransaction(transaction, connection);
-
 ```
 
 Full snippet: https://github.com/candypay/sdk/blob/main/examples/solana-wallet-adapter/components/SendTxnGasless.tsx
