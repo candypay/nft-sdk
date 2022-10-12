@@ -2,96 +2,165 @@
 
 CandyPay SDK lets you effortlessly create NFT minting functions for Candy Machine v2 collections. Simulate minting transactions for multiple use-cases like NFT collection launch, gasless mint and many more on Solana Blockchain!
 
-## Installation
+## Installtion
 
-To install the SDK, run the following command:
-
-```
-npm install @candypay/sdk
-      or
-yarn add @candypay/sdk
+```bash
+npm install @candypay/sdk @project-serum/anchor
 ```
 
-## Documentation
+## Setup
 
-The SDK currently has two core functions:
+The entry point to the SDK is a `CandyPay` instance that will give you access to its API.
 
-- `candypay.mint()`
-- `candypay.gasless()`
+```ts
+import { CandyPay } from "@candypay/sdk";
 
-### `candypay.mint()`
+const candypay = new CandyPay();
+```
 
-The `candypay.mint()` function would generate required instructions by which user can mint NFTs spending minting costs and gas fees.
+## Mint module
+
+The `mint` module can be accessed via `candypay.mint()` and provides the following methods:
+
+- [mint](#mint)
+- [gasless](#gasless)
+
+### `mint`
+
+The `mint` method allows you to generate instructions for minting a Candy Machine v2 in the default way, where the end-user would pay the gas fees.
 
 **Parameters**:
 
-- `network`: The Candy Machine's network, either `mainnet-beta` or `devnet`.
-- `candyMachineID`: The ID of the Candy Machine. The type of this parameter is `string`.
-- `payer`: The public key of the user who would pay the gas fees. In the case of this function, it would be the public key of the end-user. The type of this parameter is [`anchor.web3.PublicKey`](https://coral-xyz.github.io/anchor/ts/classes/web3.PublicKey.html)
+- `network`: The cluster where the Candy Machine has been deployed i.e either `mainnet-beta` or `devnet`
+- `candyMachineID`: The ID of the Candy Machine
+- `payer`: The public key of the end-user
+
+**Response**:
+
+- `instructions`: An array of instructions required for gasless minting of the Candy Machine
+- `mint`: Mint keypair of the NFT
 
 **Example**:
 
-```js
-import { candypay } from "@candypay/sdk";
+```ts
+import { CandyPay } from "@candypay/sdk";
+import * as anchor from "@project-serum/anchor";
 
-const ixnArray = await candypay.mint(
-  "devnet",
-  "GrVSy3ZRbuw5ACbwSEMsj9gULk9MW7QPK1TUYcP6nLM",
-  publicKey
+const candypay = new CandyPay();
+const payer = new anchor.web3.PublicKey(
+  "3DzHJzPZGBwp7uN5NSMDgQjLAo2qAF78XEMwacmnFDMk"
 );
 
-const transaction = new Transaction().add(...ixnArray.instructions);
-
-const { blockhash } = await connection.getRecentBlockhash();
-
-transaction.recentBlockhash = blockhash;
-
-transaction.feePayer = publicKey;
-
-transaction.partialSign(ixnArray["mint"]);
-
-const confirmation = await sendTransaction(transaction, connection);
+const { instructions, mint } = await candypay.mint.mint({
+  candyMachineID: "GrVSy3ZRbuw5ACbwSEMsj9gULk9MW7QPK1TUYcP6nLM",
+  network: "devnet",
+  payer,
+});
 ```
 
-Full snippet: https://github.com/candypay/sdk/blob/main/examples/solana-wallet-adapter/components/SendTxnButton.tsx
+### `gasless`
 
-### `candypay.gasless()`
-
-The `candypay.gasless()` function would generate required instructions by which the user can mint NFTs without paying any gas fees or mint price. Gas fees here will be payed by the developer/platform by passing their keypair.
+The `gasless` method allows you to generate instructions for minting a Candy Machine v2 in the gasless way, where the end-user doesn't need pay the gas fees.
 
 **Parameters**:
 
-- `network`: The Candy Machine's network, either `mainnet-beta` or `devnet`.
-- `candyMachineID`: The ID of the Candy Machine.
-- `user`: The public key of the user who would mint the NFTs. In the case of this function, it would be the public key of the end-user. The type of this parameter is [`anchor.web3.PublicKey`](https://coral-xyz.github.io/anchor/ts/classes/web3.PublicKey.html)
-- `payer`: The public key of the user who would pay the gas fees for the user. The type of this parameter is [`anchor.web3.PublicKey`](https://coral-xyz.github.io/anchor/ts/classes/web3.PublicKey.html)
+- `network`: The cluster where the Candy Machine has been deployed i.e either `mainnet-beta` or `devnet`
+- `candyMachineID`: The ID of the Candy Machine
+- `payer`: The public key of the wallet who would fund the gas fees
+- `user`: The public key of the end-user
+
+**Response**:
+
+- `instructions`: An array of instructions required for gasless minting of the Candy Machine
+- `mint`: Mint keypair of the NFT
 
 **Example**:
 
-```js
-import { candypay } from "@candypay/sdk";
+```ts
+import { CandyPay } from "@candypay/sdk";
+import * as anchor from "@project-serum/anchor";
 
-const ixnArray = await candypay.gasless(
-  "devnet",
-  "GrVSy3ZRbuw5ACbwSEMsj9gULk9MW7QPK1TUYcP6nLM",
-  payerAddress,
-  publicKey
+const candypay = new CandyPay();
+const payer = new anchor.web3.PublicKey(
+  "A9H9THrKpxUkusUpLQKmMsmG2eaLi2oR6xxzuPb7Rma2"
+);
+const user = new anchor.web3.PublicKey(
+  "3DzHJzPZGBwp7uN5NSMDgQjLAo2qAF78XEMwacmnFDMk"
 );
 
-const transaction = new Transaction().add(...ixnArray.instructions);
-
-const { blockhash } = await connection.getRecentBlockhash();
-
-transaction.recentBlockhash = blockhash;
-
-transaction.feePayer = payerAddress;
-
-transaction.partialSign(ixnArray["mint"], payerKeypair);
-
-const confirmation = await sendTransaction(transaction, connection);
+const { instructions, mint } = await candypay.mint.gasless({
+  candyMachineID: "GrVSy3ZRbuw5ACbwSEMsj9gULk9MW7QPK1TUYcP6nLM",
+  network: "devnet",
+  payer,
+  user,
+});
 ```
 
-Full snippet: https://github.com/candypay/sdk/blob/main/examples/solana-wallet-adapter/components/SendTxnGasless.tsx
+## NFT module
+
+The `nft` module can be accessed via `candypay.nft()` and provides the following methods:
+
+- [`airdrop`](#airdrop)
+
+### airdrop
+
+The `airdrop` method allows you to airdrop certain NFT without having to create a NFT beforehand.
+
+**Parameters**:
+
+- `network` - The cluster where the transaction would be simulated i.e either `mainnet-beta`, `devnet` or `testnet`
+- `payer` - The public key of the wallet which would fund the gas fees of the transaction
+- `owner` - The public key of the user to whom the NFT would be airdropped
+- `metadata` - Metadata of the NFT
+
+**Response**:
+
+- `signature` - Signature of the transaction
+- `mint` - Mint keypair of the NFT
+- `blockhash` - Blockhash which was used for the transaction
+
+**Example**:
+
+```ts
+import { CandyPay } from "@candypay/sdk";
+import * as anchor from "@project-serum/anchor";
+import dotenv from "dotenv";
+import base58 from "bs58";
+
+dotenv.config();
+
+const candypay = new CandyPay();
+const payer = anchor.web3.Keypair.fromSecretKey(
+  base58.decode(process.env.PAYER_SECRET_KEY!)
+);
+
+try {
+  const { signature } = await sdk.nft.airdrop({
+    network: "devnet",
+    payer,
+    owner: new anchor.web3.PublicKey(
+      "A9H9THrKpxUkusUpLQKmMsmG2eaLi2oR6xxzuPb7Rma2"
+    ),
+    metadata: {
+      name: "DeGod",
+      uri: "https://metadata.degods.com/g/4924.json",
+      symbol: "DEGOD",
+      collection: null,
+      sellerFeeBasisPoints: 1000,
+      creators: [
+        {
+          address: payer.publicKey,
+          verified: true,
+          share: 100,
+        },
+      ],
+      uses: null,
+    },
+  });
+} catch (err) {
+  console.log(err);
+}
+```
 
 ## Using the SDK with Next.js
 
