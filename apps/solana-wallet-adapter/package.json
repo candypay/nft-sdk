@@ -16,8 +16,7 @@
     "@solana/web3.js": "^1.47.3",
     "next": "12.2.2",
     "react": "18.2.0",
-    "react-dom": "18.2.0",
-    "tsconfig": "workspace:*"
+    "react-dom": "18.2.0"
   },
   "devDependencies": {
     "@types/bs58": "^4.0.1",
