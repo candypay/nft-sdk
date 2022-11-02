@@ -135,7 +135,7 @@ const payer = anchor.web3.Keypair.fromSecretKey(
 );
 
 try {
-  const { signature } = await sdk.nft.airdrop({
+  const { signature } = await candypay.nft.airdrop({
     network: "devnet",
     payer,
     owner: new anchor.web3.PublicKey(
