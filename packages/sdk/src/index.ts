@@ -1,11 +1,11 @@
-import { Mint, Nft } from "./modules";
+import { CandyMachine, Nft } from "./modules";
 
 export class CandyPay {
-  public mint: Mint;
+  public candyMachine: CandyMachine;
   public nft: Nft;
 
   constructor() {
-    this.mint = new Mint();
+    this.candyMachine = new CandyMachine();
     this.nft = new Nft();
   }
 }

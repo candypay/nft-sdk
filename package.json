@@ -9,7 +9,8 @@
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev --parallel",
-    "build:sdk": "turbo run build --filter=./packages/sdk"
+    "build:sdk": "turbo run build --filter=./packages/sdk",
+    "test:sdk": "turbo run test --filter=./packages/sdk"
   },
   "devDependencies": {
     "prettier": "latest",

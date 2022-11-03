@@ -1,2 +1,2 @@
-export * from "./mint";
+export * from "./candy-machine";
 export * from "./nft";

@@ -3,5 +3,6 @@
     "^.+\\.(t|j)sx?$": "ts-jest"
   },
   "testRegex": "(/tests/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$",
-  "moduleFileExtensions": ["js", "json", "ts"]
+  "moduleFileExtensions": ["js", "json", "ts"],
+  "testPathIgnorePatterns": ["node_modules", "dist", "tests/fixtures"]
 }
